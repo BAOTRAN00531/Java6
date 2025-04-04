@@ -17,18 +17,17 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalException {
     @ExceptionHandler(value = {
-            IdInvalidException.class,
             ExecutionControl.UserException.class,
             BadCredentialsException.class
     })
 
     //Config global exception and setup information to show status code,message,error.
     // After that return these variable into body
-    public ResponseEntity< ResetResponse<Object>> IdInvalidException(IdInvalidException idException) {
+    public ResponseEntity< ResetResponse<Object>> IdInvalidException(Exception ex) {
         ResetResponse<Object> rest = new ResetResponse<Object>();
         rest.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        rest.setMessageError(idException.getMessage());
-        rest.setMessage("IdInvalidException");
+        rest.setMessageError(ex.getMessage());
+//        rest.setMessage("IdInvalidException");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(rest);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)

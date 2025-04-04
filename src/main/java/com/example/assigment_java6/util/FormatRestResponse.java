@@ -33,6 +33,9 @@ public class FormatRestResponse implements ResponseBodyAdvice{
         int statusCode = servletResponse.getStatus();
         ResetResponse<Object> rest = new ResetResponse<Object>();
         rest.setStatusCode(statusCode);
+        if (body instanceof String) {
+            return body;
+        }
         //Handling for status code case with different variable value will be handled as
         //If it's equal to or above 400 then it will call body
         if(statusCode >=400 )

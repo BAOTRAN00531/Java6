@@ -9,9 +9,9 @@ public class IndexController {
     @GetMapping("/")
     public String index() throws IdInvalidException {
        // Simulate all case when return always variable's true then try exception and return a string have described about:"check index"
-        if (true) {
-            throw new IdInvalidException("check index");
-        }
+//        if (true) {
+//            throw new IdInvalidException("check index");
+//        }
         return "Hello World";
     }
 }

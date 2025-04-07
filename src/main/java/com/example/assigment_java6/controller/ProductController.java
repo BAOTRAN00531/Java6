@@ -4,11 +4,13 @@ import com.example.assigment_java6.domain.Product;
 import com.example.assigment_java6.service.ProductService;
 import com.example.assigment_java6.util.error.IdInvalidException;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Pageable; // ✅ Đúng
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ProductController {
@@ -28,8 +30,13 @@ public class ProductController {
 
     }
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.productService.handleGetAllProduct());
+    public ResponseEntity<List<Product>> getAllProducts(@RequestParam("current") Optional<String> currentOptional, @RequestParam("pageSize")Optional<String> pageSizeOptional) {
+        String sCurent=currentOptional.isPresent()?currentOptional.get():"";
+        String sPageSize=pageSizeOptional.isPresent()?pageSizeOptional.get():"";
+        int current=Integer.parseInt(sCurent);
+        int pageSize=Integer.parseInt(sPageSize);
+        Pageable pageable = PageRequest.of(current -1, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(this.productService.handleGetAllProduct(pageable));
     }
 
     @GetMapping("/products/search")

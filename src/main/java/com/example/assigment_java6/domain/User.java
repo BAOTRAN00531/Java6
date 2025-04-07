@@ -3,12 +3,12 @@ package com.example.assigment_java6.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.Date;
-
 @Data
 @Entity
 @Table(name = "Accounts")
@@ -29,9 +29,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private RoleEnum role; // CUSTOMER, STAFF, DIRECTOR
-    @CreationTimestamp
     private Instant createdAt;
-    @UpdateTimestamp
     private Instant updatedAt;
 
     @ManyToOne

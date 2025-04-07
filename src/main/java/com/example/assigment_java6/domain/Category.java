@@ -18,7 +18,7 @@ public class Category {
     private String description;
     private Instant createdAt;
     private Instant updatedAt;
-    private Instant createdBy;
-    private Instant updatedBy;
+    private String createdBy;
+    private String updatedBy;
 
 }

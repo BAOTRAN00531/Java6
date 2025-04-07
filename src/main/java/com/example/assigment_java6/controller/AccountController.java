@@ -1,14 +1,20 @@
 package com.example.assigment_java6.controller;
 
 import com.example.assigment_java6.domain.User;
+import com.example.assigment_java6.domain.dto.ResultPaginationDTO;
 import com.example.assigment_java6.service.UserService;
 import com.example.assigment_java6.util.error.IdInvalidException;
+import com.turkraft.springfilter.boot.Filter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class AccountController {
@@ -43,9 +49,21 @@ public class AccountController {
            return ResponseEntity.status(HttpStatus.OK).body(getAccountbyId);
          }
          @GetMapping("/users")
-         public ResponseEntity<List<User>> getallAccount()
+         public ResponseEntity<ResultPaginationDTO> getallAccount(
+                 @Filter Specification<User> spec,
+                 Pageable pageable
+//                @RequestParam("current")Optional<String> currentOptional,
+//                @RequestParam("pageSize")Optional<String> pageSizeOptional
+         )
          {
-           return ResponseEntity.status(HttpStatus.OK).body(this.userService.handlegetallAccount());
+//             String sCurent=currentOptional.isPresent()?currentOptional.get():"";
+//             String sPageSize=pageSizeOptional.isPresent()?pageSizeOptional.get():"";
+//
+//             int current=Integer.parseInt(sCurent);
+//             int pageSize=Integer.parseInt(sPageSize);
+//
+//             Pageable pageable = PageRequest.of(current - 1, pageSize);
+             return ResponseEntity.status(HttpStatus.OK).body(this.userService.handleGetAllAccount(spec,pageable));
          }
          @PutMapping("/users")
          public ResponseEntity<User> updateAccount(@RequestBody User postManUser) {

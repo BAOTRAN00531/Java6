@@ -1,7 +1,12 @@
 package com.example.assigment_java6.service;
 
 import com.example.assigment_java6.domain.User;
+import com.example.assigment_java6.domain.dto.Meta;
+import com.example.assigment_java6.domain.dto.ResultPaginationDTO;
 import com.example.assigment_java6.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,9 +40,22 @@ public class UserService {
     public User handleGetAccountbyUsername(String username) {
         return this.userRepository.findByEmail(username);
     }
-    //To get all account
-    public List<User> handlegetallAccount() {
-        return this.userRepository.findAll();
+//    //To get all account
+//    public List<User> handlegetallAccount(Pageable pageable) {
+//        Page<User> accounts = this.userRepository.findAll(pageable);
+//        return accounts.getContent() ;
+//    }
+    public ResultPaginationDTO handleGetAllAccount(Specification<User> spec,Pageable page) {
+       Page<User> pageUsers = this.userRepository.findAll(spec,page);
+        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
+        Meta meta = new Meta();
+        meta.setPage(pageUsers.getNumber()+1);
+        meta.setPageSize(pageUsers.getNumber());
+        meta.setPages(pageUsers.getTotalPages());
+        meta.setTotal(pageUsers.getTotalPages());
+        resultPaginationDTO.setMeta(meta);
+        resultPaginationDTO.setResult(pageUsers.getContent());
+        return resultPaginationDTO;
     }
     //First,function will find account by id when actor fill raw data.
     //After that,if function can be found data is valid ,to do update new data

@@ -2,6 +2,8 @@ package com.example.assigment_java6.service;
 import com.example.assigment_java6.domain.Product;
 
 import com.example.assigment_java6.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,8 +37,9 @@ public class ProductService {
         return this.productRepository.findByNameContainingIgnoreCase(name);
     }
     //To get all product
-    public List<Product> handleGetAllProduct() {
-        return this.productRepository.findAll();
+    public List<Product> handleGetAllProduct(Pageable pageable) {
+        Page<Product> products = this.productRepository.findAll(pageable);
+        return products.getContent() ;
     }
     public Product handleUpdateProduct(Product product) {
         Product productUpdate= this.handleGetProductById(product.getId());

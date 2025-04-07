@@ -1,5 +1,7 @@
 package com.example.assigment_java6.domain;
 
+import com.example.assigment_java6.util.SecurityUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,101 +26,20 @@ public class Product {
     private String description;
     private Integer stock;
     private String image; // URL ảnh sản phẩm
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a",timezone = "GMT+7")
     private Instant createdAt;
     private Instant updatedAt;
-    private Instant createdBy;
-    private Instant updatedBy;
+    private String createdBy;
+    private String updatedBy;
 
     // Quan hệ với Category
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Instant getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Instant createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Instant updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
+    @PrePersist
+    public void handleBeforePersist() {
+        this.createdBy= SecurityUtil.getCurrentUserLogin().isPresent()== true
+                ? SecurityUtil.getCurrentUserLogin() .get() : "";
+        this.createdAt=Instant.now();
     }
 }

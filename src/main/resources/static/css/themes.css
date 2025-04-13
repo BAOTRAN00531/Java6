@@ -1,0 +1,145 @@
+:root {
+    /* Backgrounds */
+    --primary-bg: #fff7f9; /* Main background - Soft Rose */
+    --secondary-bg: #fde2e4; /* Secondary sections */
+    --tertiary-bg: #f9a8d4; /* Cards, inputs, subtle UI */
+    --footer-bg: #1f1b24; /* Elegant deep contrast */
+
+    /* Text */
+    --text-color: #4a1332; /* Dark Mulberry - Readability */
+    --text-muted: #6b7280; /* Cool Gray - Subtext */
+    --text-inverted: #ffffff; /* White for dark backgrounds */
+
+    /* Buttons */
+    --primary-btn: #e11d48; /* Rose Red - CTA */
+    --primary-btn-text: #ffffff;
+    --primary-btn-hover: #be123c; /* Darker Rose */
+    --secondary-btn: #f8b4c1; /* Soft Blush */
+    --secondary-btn-text: #4a1332;
+    --secondary-btn-hover: #f9a8d4; /* Pastel Pink */
+
+    /* Inputs & Forms */
+    --input-bg: #fff7f9;
+    --input-border: #f9a8d4;
+    --input-text: #4a1332;
+    --input-focus: #e11d48; /* Focus border */
+
+    /* Borders & Shadows */
+    --border-color: #f9a8d4;
+    --shadow-sm: rgba(225, 29, 72, 0.1);
+    --shadow-md: rgba(225, 29, 72, 0.2);
+    --shadow-lg: rgba(225, 29, 72, 0.3);
+
+    /* Branding */
+    --logo-color: #e11d48; /* Rose Red for Logo */
+    --highlight-color: #f43f5e; /* Accent Badges, Alerts */
+
+    /* Navbar */
+    --navbar-bg: #fecdd3;
+    --navbar-text: #4a1332;
+    --navbar-hover: #f9a8d4;
+
+    /* Sidebar (Aside) */
+    --aside-bg: #f8e1e7;
+    --aside-text: #4a1332;
+    --aside-border: #f9a8d4;
+
+    /* Alerts & Messages */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+}
+
+/* ======= GLOBAL STYLES ======= */
+body {
+    font-family: InterVariable, serif;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+}
+
+.navbar {
+    background-color: var(--navbar-bg);
+    color: var(--navbar-text);
+}
+
+.logo {
+    color: var(--logo-color);
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: var(--primary-btn);
+    color: var(--primary-btn-text);
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-btn-hover);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-btn);
+    color: var(--secondary-btn-text);
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-btn-hover);
+}
+
+.input {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+}
+
+.input:focus {
+    border-color: var(--input-focus);
+    outline: none;
+}
+
+.footer {
+    background-color: var(--footer-bg);
+    color: var(--text-inverted);
+    padding: 20px;
+    text-align: center;
+}
+
+.aside {
+    background-color: var(--aside-bg);
+    color: var(--aside-text);
+}
+
+.badge {
+    background-color: var(--highlight-color);
+    color: var(--text-inverted);
+}
+
+.badge:hover {
+    background-color: var(--primary-btn);
+}
+
+.card {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+}
+
+.border-primary {
+    border: 1px solid var(--border-color);
+}
+
+.error {
+    color: var(--error);
+}
+
+.success {
+    color: var(--success);
+}
+
+.warning {
+    color: var(--warning);
+}
+
+.info {
+    color: var(--info);
+}

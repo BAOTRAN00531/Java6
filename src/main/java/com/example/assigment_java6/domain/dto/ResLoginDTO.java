@@ -1,11 +1,18 @@
 package com.example.assigment_java6.domain.dto;
 
+import lombok.*;
+
+@Data
 public class ResLoginDTO {
     private String access_token;
-    public String getAccess_token() {
-        return access_token;
-    }
-    public void setAccess_token(String access_token) {
-        this.access_token = access_token;
-    }
+    private UserLogin userp;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+   public static class UserLogin {
+       private long id;
+       private String email;
+       private String name;
+   }
 }

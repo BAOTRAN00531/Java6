@@ -27,6 +27,9 @@ public class User {
     private String address;
     private String photo; // URL ảnh đại diện
 
+
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String refreshToken;
     @Enumerated(EnumType.STRING)
     private RoleEnum role; // CUSTOMER, STAFF, DIRECTOR
     private Instant createdAt;

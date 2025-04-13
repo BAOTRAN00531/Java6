@@ -17,7 +17,7 @@ public class UserDetailCustom implements UserDetailsService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.example.assigment_java6.domain.User user = this.userService.handleGetAccountbyUsername(username);
+        com.example.assigment_java6.domain.User user = this.userService.handleGetAccountbyEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("User/Password not found");
         }

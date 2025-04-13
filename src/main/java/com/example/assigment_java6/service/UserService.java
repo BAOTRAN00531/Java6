@@ -37,26 +37,31 @@ public class UserService {
 
     }
     //To get account by string (name or email)
-    public User handleGetAccountbyUsername(String username) {
-        return this.userRepository.findByEmail(username);
+    public User handleGetAccountbyEmail(String email) {
+        return this.userRepository.findByEmail(email);
     }
+    public User handleGetAccountbyUsername(String username) {
+        return this.userRepository.findByUsername(username);
+    }
+
 //    //To get all account
 //    public List<User> handlegetallAccount(Pageable pageable) {
 //        Page<User> accounts = this.userRepository.findAll(pageable);
 //        return accounts.getContent() ;
 //    }
-    public ResultPaginationDTO handleGetAllAccount(Specification<User> spec,Pageable page) {
-       Page<User> pageUsers = this.userRepository.findAll(spec,page);
-        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
-        Meta meta = new Meta();
-        meta.setPage(pageUsers.getNumber()+1);
-        meta.setPageSize(pageUsers.getNumber());
-        meta.setPages(pageUsers.getTotalPages());
-        meta.setTotal(pageUsers.getTotalPages());
-        resultPaginationDTO.setMeta(meta);
-        resultPaginationDTO.setResult(pageUsers.getContent());
-        return resultPaginationDTO;
-    }
+public ResultPaginationDTO handleGetAllAccount(Specification<User> spec, Pageable page) {
+    Page<User> pageUsers = this.userRepository.findAll(spec, page);
+    ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
+    Meta meta = new Meta();
+    meta.setPage(pageUsers.getNumber() + 1);
+    meta.setPageSize(pageUsers.getSize()); // Sửa từ getNumber() thành getSize()
+
+    meta.setPages(pageUsers.getTotalPages());
+    meta.setTotal((int) pageUsers.getTotalElements());
+    resultPaginationDTO.setMeta(meta);
+    resultPaginationDTO.setResult(pageUsers.getContent());
+    return resultPaginationDTO;
+}
     //First,function will find account by id when actor fill raw data.
     //After that,if function can be found data is valid ,to do update new data
     // Else will be return page null
@@ -75,5 +80,16 @@ public class UserService {
 
        }
         return userUpdate;
+    }
+    public void updateUserToken(String token, String email) {
+        User currentUser = this.handleGetAccountbyEmail(email);
+        if (currentUser != null) {
+            currentUser.setRefreshToken(token);
+            this.userRepository.save(currentUser);
+
+        }
+    }
+    public User getUserByRefreshTokenAndEmail(String refreshToken,String email) {
+        return this.userRepository.findByRefreshTokenAndEmail(refreshToken,email);
     }
 }

@@ -3,10 +3,14 @@ package com.example.assigment_java6.controller;
 import com.example.assigment_java6.domain.User;
 import com.example.assigment_java6.domain.dto.ResultPaginationDTO;
 import com.example.assigment_java6.service.UserService;
+import com.example.assigment_java6.util.anotation.ApiMessage;
 import com.example.assigment_java6.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,7 @@ public class AccountController {
     //Injecting AccountService to handle tasks about Account
        private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private static final Logger log = LoggerFactory.getLogger(AccountController.class);
     public AccountController(UserService userService, PasswordEncoder passwordEncoder) {
             this.userService = userService;
            this.passwordEncoder = passwordEncoder;
@@ -48,26 +53,61 @@ public class AccountController {
            User getAccountbyId = this.userService.handleGetAccountbyId(id);
            return ResponseEntity.status(HttpStatus.OK).body(getAccountbyId);
          }
-         @GetMapping("/users")
-         public ResponseEntity<ResultPaginationDTO> getallAccount(
-                 @Filter Specification<User> spec,
-                 Pageable pageable
-//                @RequestParam("current")Optional<String> currentOptional,
-//                @RequestParam("pageSize")Optional<String> pageSizeOptional
-         )
-         {
-//             String sCurent=currentOptional.isPresent()?currentOptional.get():"";
-//             String sPageSize=pageSizeOptional.isPresent()?pageSizeOptional.get():"";
-//
-//             int current=Integer.parseInt(sCurent);
-//             int pageSize=Integer.parseInt(sPageSize);
-//
-//             Pageable pageable = PageRequest.of(current - 1, pageSize);
-             return ResponseEntity.status(HttpStatus.OK).body(this.userService.handleGetAllAccount(spec,pageable));
-         }
+        @GetMapping("/users")
+        @ApiMessage("fetch all users")
+        public ResponseEntity<ResultPaginationDTO> getallAccount(
+                @RequestParam(value = "email", required = false) String email, // Lọc tương đối theo email
+                @RequestParam(value = "fullname", required = false) String fullname, // Lọc tương đối theo tên
+                @RequestParam(value = "phone", required = false) String phone, // Lọc tương đối theo số điện thoại
+                @RequestParam(value = "username", required = false) String username, // Lọc tương đối theo username
+                @RequestParam(value = "current", defaultValue = "1") int current, // Trang hiện tại
+                @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, // Kích thước trang
+                @RequestParam(value = "sort", required = false) String sort // Sắp xếp
+        ) {
+            // Xử lý tham số sort
+            Sort sortOption = Sort.unsorted();
+            if (sort != null && !sort.isEmpty()) {
+                String[] sortParts = sort.split(",");
+                if (sortParts.length == 2) {
+                    String field = sortParts[0];
+                    String direction = sortParts[1];
+                    if ("asc".equalsIgnoreCase(direction)) {
+                        sortOption = Sort.by(Sort.Direction.ASC, field);
+                    } else if ("desc".equalsIgnoreCase(direction)) {
+                        sortOption = Sort.by(Sort.Direction.DESC, field);
+                    }
+                }
+            }
+
+            // Tạo Pageable với sort
+            Pageable pageable = PageRequest.of(current - 1, pageSize, sortOption);
+
+            // Tạo Specification với các bộ lọc tương đối
+            Specification<User> spec = Specification.where(null);
+            if (email != null && !email.isEmpty()) {
+                spec = spec.and((root, query, criteriaBuilder) ->
+                        criteriaBuilder.like(root.get("email"), "%" + email + "%"));
+            }
+            if (fullname != null && !fullname.isEmpty()) {
+                spec = spec.and((root, query, criteriaBuilder) ->
+                        criteriaBuilder.like(root.get("fullname"), "%" + fullname + "%"));
+            }
+            if (phone != null && !phone.isEmpty()) {
+                spec = spec.and((root, query, criteriaBuilder) ->
+                        criteriaBuilder.like(root.get("phone"), "%" + phone + "%"));
+            }
+            if (username != null && !username.isEmpty()) {
+                spec = spec.and((root, query, criteriaBuilder) ->
+                        criteriaBuilder.like(root.get("username"), "%" + username + "%"));
+            }
+
+            // Gọi service
+            return ResponseEntity.status(HttpStatus.OK).body(this.userService.handleGetAllAccount(spec, pageable));
+        }
          @PutMapping("/users")
          public ResponseEntity<User> updateAccount(@RequestBody User postManUser) {
             User updateAcc=this.userService.handleUpateAccount(postManUser);
             return ResponseEntity.status(HttpStatus.OK).body(updateAcc);
          }
+
 }
